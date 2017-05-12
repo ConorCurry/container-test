@@ -3,9 +3,9 @@
 coreos:
   etcd2:
     #generate a new token for each unique cluster from https://discovery.etcd.io/new
-    #discovery: https://discovery.etcd.io/<token>
+    discovery: https://discovery.etcd.io/b7566c01f6df884a4b01f94d09e8db9b
     # multi-region and multi-cloud deployments need to use $public_ipv4
-    advertise-client-urls: http://$public_ipv4:2379
+    advertise-client-urls: http://$public_ipv4:2379,http://$public_ipv4:4001
     initial-advertise-peer-urls: http://$private_ipv4:2380
     # listen on both the official ports and the legacy ports
     # legacy ports can be omitted if your application doesn't depend on them
@@ -26,18 +26,4 @@ coreos:
         content: |
           [Service]
           ExecStartPre=/usr/bin/etcdctl set /coreos.com/network/config '{ "Network": "10.1.0.0/16" }'
-      command: start
-    - name: docker-tcp.socket
-      command: start
-      enable: true
-      content: |
-        [Unit]
-        Description=Docker Socket for the API
-
-        [Socket]
-        ListenStream=2375
-        Service=docker.service
-        BindIPv6Only=both
-
-        [Install]
-        WantedBy=sockets.target
+      #command: start
